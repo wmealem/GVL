@@ -5,21 +5,32 @@ import gvl
 class TestCMajorCycle2Triad(unittest.TestCase):
 
     def test_voice_leading_start_on_root(self):
-        expected = 'CAGFDCB'
-        actual = gvl.generate_voice_lead('cycle2', 'root')
+        expected = ['C', 'A', 'G', 'F', 'D', 'C', 'B']
+        actual = gvl.generate_voice_lead('C major',
+                                         'cycle2',
+                                         'root')
         self.assertEqual(expected, actual)
 
     def test_voice_leading_start_on_fifth(self):
-        expected = 'GFECBAF'
-        actual = ''.join(gvl.generate_voice_lead('cycle2', 'fifth'))
+        expected = ['G', 'F', 'E', 'C', 'B', 'A', 'F']
+        actual = gvl.generate_voice_lead('C major',
+                                         'cycle2',
+                                         'fifth')
         self.assertEqual(expected, actual)
 
     def test_voice_leading_start_on_third(self):
-        expected = 'EDBAGED'
-        actual = ''.join(gvl.generate_voice_lead('cycle2', 'third'))
+        expected = ['E', 'D', 'B', 'A', 'G', 'E', 'D']
+        actual = gvl.generate_voice_lead('C major',
+                                         'cycle2',
+                                         'third')
         self.assertEqual(expected, actual)
 
-    def test_construct_MSRP_from_scale_degrees(self):
-        expected = 'CAGFDCB'
-        actual = gvl.generate_voice_lead('cycle2', 'root')
+
+class TestCHarmonicMinorCycle2Triad(unittest.TestCase):
+
+    def test_voice_leading_starting_on_root(self):
+        expected = ['C', 'A♭', 'G', 'F', 'D', 'C', 'B']
+        actual = gvl.generate_voice_lead('C harmonic minor',
+                                         'cycle2',
+                                         'root')
         self.assertEqual(expected, actual)

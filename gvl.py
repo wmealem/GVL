@@ -5,6 +5,8 @@ from itertools import islice
 KEYS = {'C major': {'1': 'C', '2': 'D', '3': 'E', '4': 'F', '5': 'G', '6': 'A', '7': 'B'},
         'C melodic minor': {'1': 'C', '2': 'D', '3': 'E♭', '4': 'F', '5': 'G', '6': 'A', '7': 'B'},
         'C harmonic minor': {'1': 'C', '2': 'D', '3': 'E♭', '4': 'F', '5': 'G', '6': 'A♭', '7': 'B'}}
+
+_STD_FORMAT = '↘  {:<2}↘  {:<2}↘  {:<2}↘  {:<2}↘  {:<2}↘  {:<2}↘  {:<2}↘'
 '''
  C major scale
  triads
@@ -27,7 +29,7 @@ MSRP = {'triad': {'cycle2': '165421754317643276532',
                   'cycle7': '123567234671345712456'}}
 
 
-def generate_voice_lead(cycle, starting_degree):
+def generate_voice_lead(the_key, cycle, starting_degree):
     if starting_degree == 'root':
         start, end = 0, 7
     elif starting_degree == 'fifth':
@@ -37,39 +39,43 @@ def generate_voice_lead(cycle, starting_degree):
     else:
         raise ValueError('unknown starting degree')
     fragment = islice(MSRP['triad'][cycle], start, end)
-    return ''.join([KEYS['C major'][c] for c in fragment])
+    return [KEYS[the_key][c] for c in fragment]
 
-def pretty_print(cycle, voicing_type):
+
+def pretty_print(the_key, cycle, voicing_type):
     if voicing_type == 'close':
-        print('║ ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'fifth'))))
-        print('║:↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'third'))))
-        print('║ ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'root'))))
+        print(('║ ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'fifth')))
+        print(('║:' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'third')))
+        print(('║ ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'root')))
         print()
-        print('  ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'third'))))
-        print('  ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'root'))))
-        print('  ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'fifth'))))
+        print(('  ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'third')))
+        print(('  ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'root')))
+        print(('  ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'fifth')))
         print()
-        print('  ↘  {} ↘  ║'.format(' ↘  '.join(generate_voice_lead(cycle, 'root'))))
-        print('  ↘  {} ↘ :║'.format(' ↘  '.join(generate_voice_lead(cycle, 'fifth'))))
-        print('  ↘  {} ↘  ║'.format(' ↘  '.join(generate_voice_lead(cycle, 'third'))))
+        print(('  ' + _STD_FORMAT + '  ║').format(*generate_voice_lead(the_key, cycle, 'root')))
+        print(('  ' + _STD_FORMAT + ' :║').format(*generate_voice_lead(the_key, cycle, 'fifth')))
+        print(('  ' + _STD_FORMAT + '  ║').format(*generate_voice_lead(the_key, cycle, 'third')))
     elif voicing_type == 'spread':
-        print('║ ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'third'))))
-        print('║:↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'fifth'))))
-        print('║ ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'root'))))
+        print(('║ ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'third')))
+        print(('║:' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'fifth')))
+        print(('║ ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'root')))
         print()
-        print('  ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'root'))))
-        print('  ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'third'))))
-        print('  ↘  {} ↘'.format(' ↘  '.join(generate_voice_lead(cycle, 'fifth'))))
+        print(('  ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'root')))
+        print(('  ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'third')))
+        print(('  ' + _STD_FORMAT).format(*generate_voice_lead(the_key, cycle, 'fifth')))
         print()
-        print('  ↘  {} ↘  ║'.format(' ↘  '.join(generate_voice_lead(cycle, 'fifth'))))
-        print('  ↘  {} ↘ :║'.format(' ↘  '.join(generate_voice_lead(cycle, 'root'))))
-        print('  ↘  {} ↘  ║'.format(' ↘  '.join(generate_voice_lead(cycle, 'third'))))
+        print(('  ' + _STD_FORMAT + '  ║').format(*generate_voice_lead(the_key, cycle, 'fifth')))
+        print(('  ' + _STD_FORMAT + ' :║').format(*generate_voice_lead(the_key, cycle, 'root')))
+        print(('  ' + _STD_FORMAT + '  ║').format(*generate_voice_lead(the_key, cycle, 'third')))
     else:
         raise ValueError('Unknown voicing type requested')
 
 if __name__ == '__main__':
     print('C Major triads, Cycle 2, Close Voicings')
-    pretty_print('cycle2', 'close')
+    pretty_print('C major', 'cycle2', 'close')
     print()
     print('C Major triads, Cycle 2, Spread Voicings')
-    pretty_print('cycle2', 'spread')
+    pretty_print('C major', 'cycle2', 'spread')
+    print()
+    print('C Harmonic Minor, Cycle 2, Spread Voicings')
+    pretty_print('C harmonic minor', 'cycle2', 'spread')

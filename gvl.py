@@ -2,9 +2,9 @@
 from itertools import islice
 
 
-KEYS = {'C major': ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
-        'C melodic minor': ['C', 'D', 'E♭', 'F', 'G', 'A', 'B'],
-        'C harmonic minor': ['C', 'D', 'E♭', 'F', 'G', 'A♭', 'B']}
+KEYS = {'C major': {'1': 'C', '2': 'D', '3': 'E', '4': 'F', '5': 'G', '6': 'A', '7': 'B'},
+        'C melodic minor': {'1': 'C', '2': 'D', '3': 'E♭', '4': 'F', '5': 'G', '6': 'A', '7': 'B'},
+        'C harmonic minor': {'1': 'C', '2': 'D', '3': 'E♭', '4': 'F', '5': 'G', '6': 'A♭', '7': 'B'}}
 '''
  C major scale
  triads
@@ -19,24 +19,25 @@ KEYS = {'C major': ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
  1-5-3 (spread voicing)
  Note: Only the MSRP changes for the different cycles
 '''
-MSRP = {'triad': {'cycle2': 'CAGFDCBGFECBAFEDBAGED',
-                  'cycle3': 'CBBBAAAGGGFFFEEEDDDCC',
-                  'cycle4': 'CCDEEFGGABBCDDEFFGAAB',
-                  'cycle5': 'CBAAGFFEDDCBBAGGFEEDC',
-                  'cycle6': 'CCCDDDEEEFFFGGGAAABBB',
-                  'cycle7': 'CDEGABDEFABCEFGBCDFGA'}}
+MSRP = {'triad': {'cycle2': '165421754317643276532',
+                  'cycle3': '177766655544433322211',
+                  'cycle4': '112334556771223445667',
+                  'cycle5': '176654432217765543321',
+                  'cycle6': '111222333444555666777',
+                  'cycle7': '123567234671345712456'}}
 
 
 def generate_voice_lead(cycle, starting_degree):
     if starting_degree == 'root':
-        return islice(MSRP['triad'][cycle], 0, 7)
+        start, end = 0, 7
     elif starting_degree == 'fifth':
-        return islice(MSRP['triad'][cycle], 7, 14)
+        start, end = 7, 14
     elif starting_degree == 'third':
-        return islice(MSRP['triad'][cycle], 14, 21)
+        start, end = 14, 21
     else:
         raise ValueError('unknown starting degree')
-
+    fragment = islice(MSRP['triad'][cycle], start, end)
+    return ''.join([KEYS['C major'][c] for c in fragment])
 
 def pretty_print(cycle, voicing_type):
     if voicing_type == 'close':
